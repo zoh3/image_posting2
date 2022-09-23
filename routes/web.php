@@ -19,6 +19,7 @@
 Route::group(['middleware' =>['auth']],function(){
     Route::get('/users', 'UserController@index');
     // Route::post /users　リダイレクト→/users
+    Route::post('/users', 'UserController@store');
     Route::get('/', 'WorkController@index');
     Route::get('/works/create', 'WorkController@create');
     Route::post('works/{work}/favorites', 'FavoriteController@store')->name('favorites');

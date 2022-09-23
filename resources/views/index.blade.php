@@ -21,7 +21,28 @@
         <p class='create'>[<a href='/works/create'>新規投稿</a>]</p>
         
         <div class='search'>
+            <form method="GET" action="{{ route('works.index') }}">
+                <input type="search" placeholder="タグを入力" name="search" value="@if (isset($search)) {{ $search }} @endif">
+                <div>
+                    <button type="submit">検索</button>
+                    <button>
+                        <a href="{{ route('works.index') }}" class="text-white">
+                        クリア
+                        </a>
+                    </button>
+                </div>
+            </form>
+            @foreach($work->tags as $tag)
+                <a href="{{ route('works.show', ['tag_id' => $tag->id]) }}">
+                    {{ $tag->name }}
+                </a>
+            @endforeach
             
+            <div>
+                // 下記のようにページネーターを記述するとページネートで次ページに遷移しても、検索結果を保持する
+                {{ $institutions->appends(request()->input())->links() }}
+            </div>
+
         </div>
         <!--もし18歳以上なら全作品を見せる-->
         @if(\Auth::user()->age >= 18)

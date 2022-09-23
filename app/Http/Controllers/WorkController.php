@@ -13,11 +13,33 @@ use Storage;
 class WorkController extends Controller
 {
     
-    public function index(Work $work)
+    public function index(WorkRequest $request, Work $work)
     {
-        // 検索機能
-    
-        return view('index')->with(['works'=> $work->get(), 'safe' => $work->where('age', false)->get()]);
+        // 投稿一覧をページネートで取得
+        $works = Work::paginate(5);
+        // 検索フォームで入力された値を取得する
+        $serch = $request->input('search');
+        // クエリビルダ
+        $query = Work::query();
+        
+        // もし検索フォームにキーワードが入力されたら
+        if($serch){
+            // 全角スペースを半角に変換
+            $spaceConversion = mb_convert_kana($search, 's');
+            // 単語を半角スペースで区切り、配列にする
+            $wordArraySearched = preg_split('/[\s,]+/', $spaceConversion, -1, PREG_SPLIT_NO_EMPTY);
+            // 単語をループで回し、ユーザーネームと部分一致するものがあれば、$queryとして保持される
+            foreach($wordArraySearched as $value)
+            {
+                $query->where('name', 'like', '%'.$value.'%');
+                
+                // 上記で取得した$queryをページネートにし、変数$worksに代入
+                $works = $query->paginate(5);
+            }
+            
+        }
+        
+        return view('index')->with(['works'=> $work->get(), 'safe' => $work->where('age', false)->get(),'works' =>$works, 'search' => $serch]);
     }
     
     public function show(Work $work)
