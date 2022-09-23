@@ -14,4 +14,5 @@ class UserController extends Controller
         return view('MyPage_index',[ 'auth' => $user]);
     }
     // store画像保存処理 storeメソッドだけ書く
+    
 }
