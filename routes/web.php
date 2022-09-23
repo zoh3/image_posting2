@@ -21,6 +21,8 @@ Route::group(['middleware' =>['auth']],function(){
     // Route::post /users　リダイレクト→/users
     Route::get('/', 'WorkController@index');
     Route::get('/works/create', 'WorkController@create');
+    Route::post('works/{work}/favorites', 'FavoriteController@store')->name('favorites');
+    Route::post('works/{work}/unfavorites', 'FavoriteController@destroy')->name('unfavorites');
     Route::get('/works/{work}/edit', 'WorkController@edit');
     Route::put('/works/{work}', 'WorkController@update');
     Route::delete('/works/{work}', 'WorkController@destroy');

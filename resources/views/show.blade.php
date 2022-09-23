@@ -50,13 +50,30 @@
                     <span class="badge badge-pill badge-info">{{ $tag->name }}</span>
                 @endforeach    
             </h5>
-        <form action="/works/{{ $tag->id }}" id="form_delete" method="POST">
+        <form action="/works/{{ $tag->id }}" id="form_{{ $tag->id }}" method="POST">
             {{ csrf_field() }}
             {{ method_field('delete') }}
             <input type="submit" style="display:none">
             <button type="submit" class="btn btn-danger">削除</button>
         </form>
-        
+    <div class="form-group row">
+    {!! Form::label('tags', 'タグ', ['class' => 'col-sm-2 control-label']) !!}
+        <div class="col-sm-10">
+            <div class="{{ $errors->has('tags.*') ? 'is-invalid' : '' }}">
+                @foreach ($work->tags as $tag)
+                    <div class="form-check form-check-inline">
+                        {!! Form::checkbox( 'tags[]', $tag, null, ['class' => 'form-check-input', 'id' => 'tag'.$tag]) !!}
+                        <label class="form-check-label" for="tag{{$tag}}">{{ $tag }}</label>
+                    </div>
+                @endforeach
+        </div>
+        @error('tags.*')
+            <span class="invalid-feedback" role="alert">
+                {{ $message }}
+            </span>
+        @enderror
+    </div>
+</div>
             <p class="body">{{ $work->body }}</p>
             
             <p class="updated_at">{{ $work->updated_at }}</p>

@@ -38,11 +38,11 @@
             
            
             <div class="tags">
-                <textarea id="tags" type="text" name="tags" rows="3" cols="40" style="text-align:left;">
+                <input id="tags" type="text" name="tags">
                     @foreach($work->tags as $tag)
-                    {{ trim($tag->name) }} 
+                    {{ $tag->name }} 
                     @endforeach
-                </textarea>
+                </input>
                     
             </div>
            

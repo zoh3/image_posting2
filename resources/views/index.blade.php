@@ -49,6 +49,19 @@
                         <span class="badge badge-info">{{ $tag->name }}</span>
                     @endforeach    
                 </h5>
+                
+                <div class="col-md-3">
+                    <from action="{{ route('favorites', $work) }}" method="POST">
+                        {{ csrf_field() }}
+                        <input type="submit" value="&#xf164;ブックマーク" class="fas btn btn-success">
+                    </from>
+                </div>
+                <div class="col-md-3">
+                    <from action="{{ route('unfavorites', $work) }}" method="POST">
+                        {{ csrf_field() }}
+                        <input type="submit" value="&#xf164;ブックマークを取り消す" class="fas btn btn-danger">
+                    </from>
+                </div>
             </div>
             @endforeach
         </div>

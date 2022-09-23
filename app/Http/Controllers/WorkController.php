@@ -111,7 +111,10 @@ class WorkController extends Controller
         return redirect('/');
     }
     public function tag_destroy(Work $work){
-        $work->tags()->detach($tags_id);
+        $work->tags()->detach();
+        if ($work->delete()){
+            
+        }
         return redirect('/works/' . $work->id);
     }
 }
