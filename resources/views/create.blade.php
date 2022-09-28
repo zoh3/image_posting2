@@ -51,6 +51,7 @@
             </div>
             <p class="age_error" style="color:red">{{ $errors->first('work.age') }}</p>
             @else
+            <!--18歳以下ならageに0で送信-->
             <input type="hidden" name="work[age]" value="0">
             @endif
             

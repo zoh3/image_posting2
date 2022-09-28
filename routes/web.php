@@ -20,15 +20,16 @@ Route::group(['middleware' =>['auth']],function(){
     Route::get('/users', 'UserController@index');
     // Route::post /users　リダイレクト→/users
     Route::post('/users', 'UserController@store');
-    Route::get('/', 'WorkController@index');
+    Route::get('/works/search', 'WorkController@search')->name('search');
+    Route::get('/', 'WorkController@index')->name('index');
     Route::get('/works/create', 'WorkController@create');
-    Route::post('works/{work}/favorites', 'FavoriteController@store')->name('favorites');
-    Route::post('works/{work}/unfavorites', 'FavoriteController@destroy')->name('unfavorites');
+    Route::get('/works/{work}', 'WorkController@show')->name('show');
     Route::get('/works/{work}/edit', 'WorkController@edit');
+    Route::post('works/{work}/likes', 'FavoriteController@like')->name('likes');
+    Route::post('works/{work}/unlikes', 'FavoriteController@unlike')->name('unlikes');
     Route::put('/works/{work}', 'WorkController@update');
+    Route::delete('/works/', 'WorkController@tag_destroy')->name('tag_destroy');
     Route::delete('/works/{work}', 'WorkController@destroy');
-    Route::delete('/works/', 'WorkController@tag_destroy');
-    Route::get('/works/{work}', 'WorkController@show');
     Route::post('/works' , 'WorkController@store');
 });
 

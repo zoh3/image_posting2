@@ -39,7 +39,8 @@
         </div>    
         @if (Session::has('message'))
             <p>{{ session('messege')}}</p>
-        @endif    
+        @endif
+        <div class="back">[<a href="/">戻る</a>]</div>
     </body>
 </html>
 @endsection

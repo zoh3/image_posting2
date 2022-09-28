@@ -21,29 +21,17 @@
         <p class='create'>[<a href='/works/create'>新規投稿</a>]</p>
         
         <div class='search'>
-            <form method="GET" action="{{ route('works.index') }}">
-                <input type="search" placeholder="タグを入力" name="search" value="@if (isset($search)) {{ $search }} @endif">
-                <div>
-                    <button type="submit">検索</button>
-                    <button>
-                        <a href="{{ route('works.index') }}" class="text-white">
-                        クリア
-                        </a>
-                    </button>
+            <form action="/works/search" method="GET">
+                {{ csrf_field()}}
+                {{ method_field('get')}}
+                <div class="form-group">
+                <label>タグ検索</label>
+                <input type="text" name="search" class="form-control col-md-5" placeholder="検索したいタグを入力してください" value="@if (isset($search)) {{$search}} @endif">
                 </div>
+                <button type="submit" class="btn btn-primary col-md-5">検索</button>
             </form>
-            @foreach($work->tags as $tag)
-                <a href="{{ route('works.show', ['tag_id' => $tag->id]) }}">
-                    {{ $tag->name }}
-                </a>
-            @endforeach
-            
-            <div>
-                // 下記のようにページネーターを記述するとページネートで次ページに遷移しても、検索結果を保持する
-                {{ $institutions->appends(request()->input())->links() }}
-            </div>
-
         </div>
+        
         <!--もし18歳以上なら全作品を見せる-->
         @if(\Auth::user()->age >= 18)
         <div class='works'>
@@ -70,24 +58,31 @@
                         <span class="badge badge-info">{{ $tag->name }}</span>
                     @endforeach    
                 </h5>
-                
-                <div class="col-md-3">
-                    <from action="{{ route('favorites', $work) }}" method="POST">
+                @if ($work->users()->where('user_id', Auth::id())->exists())
+                    <div class="col-md-3">
+                    <from action="{{ route('unlikes', $work)}}" method="POST">
+                        {{ csrf_field() }}
+                        {{ method_field('delete') }}
+                        <input type="submit" value="&#xf164;ブックマーク取り消す" class="fas btn btn-danger">
+                    </from>
+                    
+                    </div>
+                @else
+                    <div class="like">
+                    <from action="{{ route('unlikes', $work)}}" method="POST">
                         {{ csrf_field() }}
                         <input type="submit" value="&#xf164;ブックマーク" class="fas btn btn-success">
                     </from>
-                </div>
-                <div class="col-md-3">
-                    <from action="{{ route('unfavorites', $work) }}" method="POST">
-                        {{ csrf_field() }}
-                        <input type="submit" value="&#xf164;ブックマークを取り消す" class="fas btn btn-danger">
-                    </from>
-                </div>
+                        <div class="row justify-content-center">
+                            <p>いいね数：{{ $work->users()->count() }}</p>
+                        </div>
+                    </div>
+                @endif
             </div>
             @endforeach
         </div>
         @else
-        @foreach ($safe as $work)
+            @foreach ($safe as $work)
             <div class='work'>
                 <a href='/works/{{ $work->id}}'><h2 class='作品名'>{{ $work->title }}</h2></a>
                 

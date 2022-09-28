@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Tag;
+use App\Work;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -35,10 +35,10 @@ class FavoriteController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Work $work)
+    public function store(Request $request, User $user, Work $work)
     {
         $work->users()->attach(Auth::id());
-        return redirect('/');
+        return redirect()->route('index');
     }
 
     /**
@@ -81,9 +81,9 @@ class FavoriteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Work $work)
+    public function unlike(Request $request, Work $work)
     {
-        $work->users()->detach(Auth::id());
-        return redirect('/');
+        $work->likes()->detach(Auth::id());
+        return redirect()->route('index');
     }
 }
