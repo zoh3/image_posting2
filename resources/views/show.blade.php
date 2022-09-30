@@ -45,18 +45,23 @@
             </div>
             @endif
             
-            <h5 class='tag'>
+            <!--タグ削除機能-->
+            @if ($work->tags)
+            <div class='tags'>
                 @foreach($work->tags as $tag)
-                    <span class="badge badge-pill badge-info">{{ $tag->name }}</span>
+                    <div class="tag">
+                        <p class="badge badge-pill badge-info">{{ $tag->name }}</p>
+                        <form action='/works/{{ $work->id }}/tags/{{ $tag->id }}' id="form_delete" method="POST">
+                        {{ csrf_field() }}
+                        <input type="submit" style="display:none" value="delete">
+                        <button type="submit" class="btn btn-danger">削除</button>
+                        </form>
+                    </div>
                 @endforeach    
-            </h5>
-        <form action="/works/{{ $tag->id }}" id="form_delete" method="POST">
-            {{ csrf_field() }}
-            {{ method_field('delete') }}
-            <input type="submit" style="display:none">
-            <button type="submit" class="btn btn-danger">削除</button>
-        </form>
-        
+            </div>
+            @endif
+       
+</div>
             <p class="body">{{ $work->body }}</p>
             
             <p class="updated_at">{{ $work->updated_at }}</p>

@@ -28,7 +28,7 @@
                 <input type="file" name="image">
             </div>
             <div class="tags">
-                <input id="tags" type="text" name="tags" placeholder="＃(半角)タグを入力" value="{{old('tags')}}">
+                <input id="tags" type="text" name="tags" placeholder="＃(半角・スペースなし)タグを入力" value="{{old('tags')}}">
             </div>
             <div class="body">
                 <h2>コメント</h2>
@@ -51,6 +51,7 @@
             </div>
             <p class="age_error" style="color:red">{{ $errors->first('work.age') }}</p>
             @else
+            <!--18歳以下ならageに0で送信-->
             <input type="hidden" name="work[age]" value="0">
             @endif
             
