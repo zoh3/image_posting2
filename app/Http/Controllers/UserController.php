@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use Storage;
+// use Storage;
+use Illuminate\Support\Facades\Storage;
+
 
 // ファサード
 class UserController extends Controller
@@ -15,16 +17,22 @@ class UserController extends Controller
         return view('MyPage_index',[ 'auth' => $user]);
     }
     // store画像保存処理 storeメソッドだけ書く
-    public function store(Request $request, User $user)
+    public function store(Request $request)
     {
-        $input = $request['auth'];
-        if($request->image)
+        $user = Auth::user();
+        
+        
+        
+        if($request->Mypage_image)
         {
-            $image = $request->file('image');
-            $path = torage::disk('s3')->putFile('illustration-image-bucket3', $image, 'public');
+            // 相対パス
+            Storage::disk('s3')->delete(substr($user->image, 62));
+
+            $image = $request->file('Mypage_image');
+            $path = Storage::disk('s3')->putFile('illustration-image-bucket3', $image, 'public');
             $user->image = Storage::disk('s3')->url($path);
         }
-        $user->fill($input)->save();
+        $user->save();
         return redirect('/users');
     }
     // public function update(WorkRequest $request, Work $work)

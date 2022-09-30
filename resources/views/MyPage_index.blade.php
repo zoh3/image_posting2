@@ -22,6 +22,7 @@
         <p class='e-mail'>メールアドレス:{{$auth->email}}</p>
         <div class='image'>
             <form action="/users" method="POST" enctype="multipart/form-data">
+                {{ csrf_field() }}
                 <input type="file" name="Mypage_image">
                 @if ($auth->image)
                     <style>

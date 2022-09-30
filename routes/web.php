@@ -28,7 +28,7 @@ Route::group(['middleware' =>['auth']],function(){
     Route::post('works/{work}/likes', 'FavoriteController@like')->name('likes');
     Route::post('works/{work}/unlikes', 'FavoriteController@unlike')->name('unlikes');
     Route::put('/works/{work}', 'WorkController@update');
-    Route::delete('/works/', 'WorkController@tag_destroy')->name('tag_destroy');
+    Route::post('/works/{work}/tags/{tag}', 'WorkController@tag_destroy')->name('tag_destroy');
     Route::delete('/works/{work}', 'WorkController@destroy');
     Route::post('/works' , 'WorkController@store');
 });

@@ -7,7 +7,7 @@ use App\Work;
 use App\Tag;
 use App\User;
 use App\Http\Requests\WorkRequest;
-// use Illuminate\Http\Request;
+use Illuminate\Http\Request;
 use Storage;
 
 class WorkController extends Controller
@@ -42,10 +42,8 @@ class WorkController extends Controller
         return view('index')->with(['works'=> $work->get(), 'safe' => $work->where('age', false)->get()]);
     }
     
-    public function search(WorkRequest $request, Work $work, Tag $tag)
+    public function search(Request $request, Tag $tag)
     {
-        // 投稿一覧をページネートで取得
-        $works = Work::paginate(5);
         // 検索フォームで入力された値を取得する
         $search = $request->input('search');
         // クエリビルダ
@@ -54,18 +52,18 @@ class WorkController extends Controller
         $tags = Tag::get();
         
         // もし検索フォームにキーワードが入力されたら
-        if(($serch)){
-            $query->whereHas('tags', function($query) use($search){
-                $query->where('work_tag.tag_id', $search);
+        if(!empty($search)){
+            $query->whereHas('tags', function($q) use($search) {
+	            $q->where('tags.name', $search);
             });
-        }    
+
+            // $work->whereIn('tag_id', function($query) use($request){
+            //     $query->from('tags')->select('tag_id')->where('name', $request->name);
+            // })->get();
+        } 
+        $works = $query->get();
         
-        $results = $query->latest('published')->paginate(5); 
-        
-        return view('search')
-        ->with('works', $work)
-        ->with('search', $search)
-        ->with('tags', $tags);
+        return view('search')->with(['works' => $works]);
         
     }
     
@@ -159,8 +157,8 @@ class WorkController extends Controller
         $work->delete();
         return redirect('/');
     }
-    public function tag_destroy(WorkRequest $request, Work $work, Tag $tag){
-        $work->tags()->detach($request->user()->id);
+    public function tag_destroy(Work $work, Tag $tag){
+        $work->tags()->detach($tag->id);
         return redirect('/works/' . $work->id);
     }
     

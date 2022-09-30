@@ -21,9 +21,8 @@
         <p class='create'>[<a href='/works/create'>新規投稿</a>]</p>
         
         <div class='search'>
-            <form action="/works/search" method="GET">
+            <form action="/works/search" name="tag" method="GET">
                 {{ csrf_field()}}
-                {{ method_field('get')}}
                 <div class="form-group">
                 <label>タグ検索</label>
                 <input type="text" name="search" class="form-control col-md-5" placeholder="検索したいタグを入力してください" value="@if (isset($search)) {{$search}} @endif">
@@ -31,6 +30,8 @@
                 <button type="submit" class="btn btn-primary col-md-5">検索</button>
             </form>
         </div>
+        
+    
         
         <!--もし18歳以上なら全作品を見せる-->
         @if(\Auth::user()->age >= 18)
@@ -60,22 +61,18 @@
                 </h5>
                 @if ($work->users()->where('user_id', Auth::id())->exists())
                     <div class="col-md-3">
-                    <from action="{{ route('unlikes', $work)}}" method="POST">
+                    <form action="{{ route('unlikes', $work->id)}}" method="POST">
                         {{ csrf_field() }}
-                        {{ method_field('delete') }}
                         <input type="submit" value="&#xf164;ブックマーク取り消す" class="fas btn btn-danger">
-                    </from>
+                    </form>
                     
                     </div>
                 @else
                     <div class="like">
-                    <from action="{{ route('unlikes', $work)}}" method="POST">
+                    <form action="{{ route('likes', $work->id )}}" method="POST">
                         {{ csrf_field() }}
                         <input type="submit" value="&#xf164;ブックマーク" class="fas btn btn-success">
-                    </from>
-                        <div class="row justify-content-center">
-                            <p>いいね数：{{ $work->users()->count() }}</p>
-                        </div>
+                    </form>
                     </div>
                 @endif
             </div>

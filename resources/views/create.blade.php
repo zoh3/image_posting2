@@ -28,7 +28,7 @@
                 <input type="file" name="image">
             </div>
             <div class="tags">
-                <input id="tags" type="text" name="tags" placeholder="＃(半角)タグを入力" value="{{old('tags')}}">
+                <input id="tags" type="text" name="tags" placeholder="＃(半角・スペースなし)タグを入力" value="{{old('tags')}}">
             </div>
             <div class="body">
                 <h2>コメント</h2>

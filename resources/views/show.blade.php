@@ -45,14 +45,14 @@
             </div>
             @endif
             
+            <!--タグ削除機能-->
             @if ($work->tags)
             <div class='tags'>
                 @foreach($work->tags as $tag)
                     <div class="tag">
                         <p class="badge badge-pill badge-info">{{ $tag->name }}</p>
-                        <form action='{{ route("tag_destroy" , $tag) }}' id="form_delete" method="POST">
+                        <form action='/works/{{ $work->id }}/tags/{{ $tag->id }}' id="form_delete" method="POST">
                         {{ csrf_field() }}
-                        {{ method_field('delete') }}
                         <input type="submit" style="display:none" value="delete">
                         <button type="submit" class="btn btn-danger">削除</button>
                         </form>

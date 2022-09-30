@@ -35,7 +35,7 @@ class FavoriteController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, User $user, Work $work)
+    public function like(Request $request, User $user, Work $work)
     {
         $work->users()->attach(Auth::id());
         return redirect()->route('index');
@@ -83,7 +83,7 @@ class FavoriteController extends Controller
      */
     public function unlike(Request $request, Work $work)
     {
-        $work->likes()->detach(Auth::id());
+        $work->users()->detach(Auth::id());
         return redirect()->route('index');
     }
 }
