@@ -22,6 +22,7 @@
         <p class='e-mail'>メールアドレス:{{$auth->email}}</p>
         <div class='image'>
             <form action="/users" method="POST" enctype="multipart/form-data">
+                {{ csrf_field() }}
                 <input type="file" name="Mypage_image">
                 @if ($auth->image)
                     <style>
@@ -39,7 +40,8 @@
         </div>    
         @if (Session::has('message'))
             <p>{{ session('messege')}}</p>
-        @endif    
+        @endif
+        <div class="back">[<a href="/">戻る</a>]</div>
     </body>
 </html>
 @endsection

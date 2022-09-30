@@ -7,7 +7,7 @@ use App\Work;
 use App\Tag;
 use App\User;
 use App\Http\Requests\WorkRequest;
-// use Illuminate\Http\Request;
+use Illuminate\Http\Request;
 use Storage;
 
 class WorkController extends Controller
@@ -15,9 +15,56 @@ class WorkController extends Controller
     
     public function index(Work $work)
     {
-        // 検索機能
-    
+        // // 投稿一覧をページネートで取得
+        // $works = Work::paginate(5);
+        // // 検索フォームで入力された値を取得する
+        // $serch = $request->input('search');
+        // // クエリビルダ
+        // $query = Work::query();
+        
+        // // もし検索フォームにキーワードが入力されたら
+        // if($serch){
+        //     // 全角スペースを半角に変換
+        //     $spaceConversion = mb_convert_kana($search, 's');
+        //     // 単語を半角スペースで区切り、配列にする
+        //     $wordArraySearched = preg_split('/[\s,]+/', $spaceConversion, -1, PREG_SPLIT_NO_EMPTY);
+        //     // 単語をループで回し、ユーザーネームと部分一致するものがあれば、$queryとして保持される
+        //     foreach($wordArraySearched as $value)
+        //     {
+        //         $query->where('name', 'like', '%'.$value.'%');
+                
+        //         // 上記で取得した$queryをページネートにし、変数$worksに代入
+        //         $works = $query->paginate(5);
+        //     }
+            
+        // }
+        
         return view('index')->with(['works'=> $work->get(), 'safe' => $work->where('age', false)->get()]);
+    }
+    
+    public function search(Request $request, Tag $tag)
+    {
+        // 検索フォームで入力された値を取得する
+        $search = $request->input('search');
+        // クエリビルダ
+        $query = Work::query();
+        
+        $tags = Tag::get();
+        
+        // もし検索フォームにキーワードが入力されたら
+        if(!empty($search)){
+            $query->whereHas('tags', function($q) use($search) {
+	            $q->where('tags.name', $search);
+            });
+
+            // $work->whereIn('tag_id', function($query) use($request){
+            //     $query->from('tags')->select('tag_id')->where('name', $request->name);
+            // })->get();
+        } 
+        $works = $query->get();
+        
+        return view('search')->with(['works' => $works]);
+        
     }
     
     public function show(Work $work)
@@ -110,8 +157,10 @@ class WorkController extends Controller
         $work->delete();
         return redirect('/');
     }
-    public function tag_destroy(Work $work){
-        $work->tags()->detach($tags_id);
+    public function tag_destroy(Work $work, Tag $tag){
+        $work->tags()->detach($tag->id);
         return redirect('/works/' . $work->id);
     }
+    
+    
 }

@@ -38,12 +38,11 @@
             
            
             <div class="tags">
-                <textarea id="tags" type="text" name="tags" rows="3" cols="40" style="text-align:left;">
+                <label id="tags" type="text" name="tags">
                     @foreach($work->tags as $tag)
-                    {{ trim($tag->name) }} 
+                    {{ $tag->name }} 
                     @endforeach
-                </textarea>
-                    
+                </label>
             </div>
            
             <input type="text" id="tags" name="tags" placeholder="＃(半角)タグを入力">
@@ -53,17 +52,23 @@
                 <textarea name="work[body]" placeholder="コメント">{{ $work->body }}</textarea>
                 
             </div>
+            @if(\Auth::user()->age >= 18)
             <div class="age">
                 <p>成人向けコンテンツとして投稿する</p>
                <label>
                    
-                   <input type="radio" name="age" value="yes" required>はい
+                   <input type="radio" name="work[age]" value="1" required>はい
                </label>
                <label>
                    
-                   <input type="radio" name="age" value="no">いいえ
+                   <input type="radio" name="work[age]" value="0" required>いいえ
                </label>
             </div>
+            <p class="age_error" style="color:red">{{ $errors->first('work.age') }}</p>
+            @else
+            <!--18歳以下ならageに0で送信-->
+            <input type="hidden" name="work[age]" value="0">
+            @endif
             <input type="submit" value="更新"/>
         </form>
         <div class="戻る">[<a href="/works/{{ $work->id }}">戻る</a>]</div>
